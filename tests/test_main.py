@@ -73,3 +73,7 @@ class TestCatchTime(IsolatedAsyncioTestCase):
         await asyncio.sleep(self.wait_after)
 
         self.assertAlmostEqual(float(stream.getvalue()), self.wait, delta=self.delta)
+
+    async def test_error(self):
+        with self.assertRaises(RuntimeError):
+            timer().__exit__(None, None, None)
