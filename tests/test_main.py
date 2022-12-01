@@ -8,7 +8,7 @@ from unittest import IsolatedAsyncioTestCase
 
 from parameterized import parameterized_class
 
-from cm_timer import timer, timer_wrapped
+from cm_time import timer, timer_wrapped
 
 
 @parameterized_class(
