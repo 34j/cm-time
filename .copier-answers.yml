@@ -1,0 +1,19 @@
+# Changes here will be overwritten by Copier
+_commit: c3c975e
+_src_path: gh:browniebroke/pypackage-template
+add_me_as_contributor: false
+copyright_year: '2022'
+documentation: true
+email: 34j.95a2p@simplelogin.com
+full_name: 34j
+github_username: 34j
+initial_commit: false
+open_source_license: MIT
+package_name: cm_timer
+project_name: Catch Time
+project_short_description: A simple context manager that measures time using perf_counter()
+project_slug: cm-timer
+run_poetry_install: false
+setup_github: false
+setup_pre_commit: false
+
