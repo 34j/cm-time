@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import asyncio
 from io import StringIO
 from logging import INFO, Logger, StreamHandler, getLogger
