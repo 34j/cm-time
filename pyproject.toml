@@ -1,12 +1,12 @@
 [tool.poetry]
-name = "cm-timer"
+name = "cm-time"
 version = "0.0.1"
 description = "A simple context manager that measures time using perf_counter()"
 authors = ["34j <34j.95a2p@simplelogin.com>"]
 license = "CC0-1.0"
 readme = "README.md"
-repository = "https://github.com/34j/cm-timer"
-documentation = "https://cm-timer.readthedocs.io"
+repository = "https://github.com/34j/cm-time"
+documentation = "https://cm-time.readthedocs.io"
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "Intended Audience :: Developers",
@@ -15,12 +15,12 @@ classifiers = [
     "Topic :: Software Development :: Libraries",
 ]
 packages = [
-    { include = "cm_timer", from = "src" },
+    { include = "cm_time", from = "src" },
 ]
 
 [tool.poetry.urls]
-"Bug Tracker" = "https://github.com/34j/cm-timer/issues"
-"Changelog" = "https://github.com/34j/cm-timer/blob/main/CHANGELOG.md"
+"Bug Tracker" = "https://github.com/34j/cm-time/issues"
+"Changelog" = "https://github.com/34j/cm-time/blob/main/CHANGELOG.md"
 
 [tool.poetry.dependencies]
 python = "^3.7"
@@ -43,11 +43,11 @@ sphinx-rtd-theme = ">=1.0"
 [tool.semantic_release]
 branch = "main"
 version_toml = "pyproject.toml:tool.poetry.version"
-version_variable = "src/cm_timer/__init__.py:__version__"
+version_variable = "src/cm_time/__init__.py:__version__"
 build_command = "pip install poetry && poetry build"
 
 [tool.pytest.ini_options]
-addopts = "-v -Wdefault --cov=cm_timer --cov-report=term-missing:skip-covered"
+addopts = "-v -Wdefault --cov=cm_time --cov-report=term-missing:skip-covered"
 pythonpath = ["src"]
 
 [tool.coverage.run]
@@ -64,7 +64,7 @@ exclude_lines = [
 
 [tool.isort]
 profile = "black"
-known_first_party = ["cm_timer", "tests"]
+known_first_party = ["cm_time", "tests"]
 
 [tool.mypy]
 check_untyped_defs = true

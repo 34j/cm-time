@@ -43,7 +43,7 @@ class timer(ContextDecorator):
 
         Examples
         --------
-        >>> from cm_timer import timer
+        >>> from cm_time import timer
         >>> with timer() as ct:
         >>>     pass
         >>> print(ct.elapsed)

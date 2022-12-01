@@ -1,14 +1,14 @@
-# Catch Time
+# A Context Manager and A Decorator for Measuring Execution Time
 
 <p align="center">
-  <a href="https://github.com/34j/cm-timer/actions?query=workflow%3ACI">
-    <img src="https://img.shields.io/github/workflow/status/34j/cm-timer/CI/main?label=CI&logo=github&style=flat-square" alt="CI Status" >
+  <a href="https://github.com/34j/cm-time/actions?query=workflow%3ACI">
+    <img src="https://img.shields.io/github/workflow/status/34j/cm-time/CI/main?label=CI&logo=github&style=flat-square" alt="CI Status" >
   </a>
-  <a href="https://cm-timer.readthedocs.io">
-    <img src="https://img.shields.io/readthedocs/cm-timer.svg?logo=read-the-docs&logoColor=fff&style=flat-square" alt="Documentation Status">
+  <a href="https://cm-time.readthedocs.io">
+    <img src="https://img.shields.io/readthedocs/cm-time.svg?logo=read-the-docs&logoColor=fff&style=flat-square" alt="Documentation Status">
   </a>
-  <a href="https://codecov.io/gh/34j/cm-timer">
-    <img src="https://img.shields.io/codecov/c/github/34j/cm-timer.svg?logo=codecov&logoColor=fff&style=flat-square" alt="Test coverage percentage">
+  <a href="https://codecov.io/gh/34j/cm-time">
+    <img src="https://img.shields.io/codecov/c/github/34j/cm-time.svg?logo=codecov&logoColor=fff&style=flat-square" alt="Test coverage percentage">
   </a>
 </p>
 <p align="center">
@@ -23,11 +23,11 @@
   </a>
 </p>
 <p align="center">
-  <a href="https://pypi.org/project/cm-timer/">
-    <img src="https://img.shields.io/pypi/v/cm-timer.svg?logo=python&logoColor=fff&style=flat-square" alt="PyPI Version">
+  <a href="https://pypi.org/project/cm-time/">
+    <img src="https://img.shields.io/pypi/v/cm-time.svg?logo=python&logoColor=fff&style=flat-square" alt="PyPI Version">
   </a>
-  <img src="https://img.shields.io/pypi/pyversions/cm-timer.svg?style=flat-square&logo=python&amp;logoColor=fff" alt="Supported Python versions">
-  <img src="https://img.shields.io/pypi/l/cm-timer.svg?style=flat-square" alt="License">
+  <img src="https://img.shields.io/pypi/pyversions/cm-time.svg?style=flat-square&logo=python&amp;logoColor=fff" alt="Supported Python versions">
+  <img src="https://img.shields.io/pypi/l/cm-time.svg?style=flat-square" alt="License">
 </p>
 
 A simple context manager that measures time using perf_counter()
@@ -36,13 +36,13 @@ A simple context manager that measures time using perf_counter()
 
 Install this via pip (or your favourite package manager):
 
-`pip install cm-timer`
+`pip install cm-time`
 
 ## Usage
 
 ```python
-from cm_timer import cm_timer
-with cm_timer() as ct:
+from cm_time import cm_time
+with cm_time() as ct:
       pass
 print(ct.elapsed)
 ```
