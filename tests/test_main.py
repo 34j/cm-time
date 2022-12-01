@@ -62,7 +62,10 @@ class TestCatchTime(IsolatedAsyncioTestCase):
 
         test()
 
-        self.assertEqual(stream.getvalue(), "Elapsed time: 0.000\n")
+        self.assertEqual(
+            stream.getvalue(),
+            "TestCatchTime.test_wrapped.<locals>.test: Elapsed time: 0.000\n",
+        )
 
     async def test_wrapped_async(self):
         logger, stream = self.get_string_logger()

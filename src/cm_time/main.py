@@ -85,7 +85,7 @@ _TResult = TypeVar("_TResult")
 
 
 def timer_wrapped(
-    message: str = "Elapsed time: {:.3f}",
+    message: str = "{func}: Elapsed time: {:.3f}",
     logger: Logger | None = None,
     level: int = INFO,
 ) -> Callable[[Callable[_TParams, _TResult]], Callable[_TParams, _TResult],]:
@@ -111,13 +111,14 @@ def timer_wrapped(
     def inner(
         func: Callable[_TParams, _TResult | Awaitable[_TResult]]
     ) -> Callable[_TParams, _TResult | Awaitable[_TResult]]:
+        replaced_message = message.replace("{func}", func.__qualname__)
         if inspect.iscoroutinefunction(func):
 
             @wraps(func)
             async def wrapper_async(
                 *args: _TParams.args, **kwargs: _TParams.kwargs
             ) -> _TResult:
-                with timer(message=message, logger=logger, level=level):
+                with timer(message=replaced_message, logger=logger, level=level):
                     return await func(*args, **kwargs)  # type: ignore
 
             return wrapper_async
@@ -125,7 +126,7 @@ def timer_wrapped(
 
             @wraps(func)
             def wrapper(*args: _TParams.args, **kwargs: _TParams.kwargs) -> _TResult:
-                with timer(message=message, logger=logger, level=level):
+                with timer(message=replaced_message, logger=logger, level=level):
                     return func(*args, **kwargs)  # type: ignore
 
             return wrapper
