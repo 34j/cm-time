@@ -1,11 +1,17 @@
 from __future__ import annotations
 
 import inspect
+import sys
 from contextlib import ContextDecorator
 from functools import wraps
 from logging import INFO, Logger
 from time import perf_counter
-from typing import Awaitable, Callable, ParamSpec, TypeVar
+from typing import Awaitable, Callable, TypeVar
+
+if sys.version_info < (3, 10):
+    from typing_extensions import ParamSpec
+else:
+    from typing import ParamSpec
 
 
 class timer(ContextDecorator):
