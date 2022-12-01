@@ -41,10 +41,12 @@ Install this via pip (or your favourite package manager):
 ## Usage
 
 ```python
-from cm_time import cm_time
-with cm_time() as ct:
+from cm_time import timer
+
+with timer() as t:
       pass
-print(ct.elapsed)
+
+print(t.elapsed)
 ```
 
 Output:
@@ -52,6 +54,20 @@ Output:
 ```shell
 Elapsed time: 0.000
 0.0
+```
+
+```python
+from cm_time import timer_wrapped
+
+@timer_wrapped()
+def foo():
+    pass
+```
+
+Output:
+
+```shell
+foo: Elapsed time: 0.000
 ```
 
 ## Contributors ✨

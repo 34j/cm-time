@@ -4,7 +4,7 @@ import inspect
 import sys
 from contextlib import ContextDecorator
 from functools import wraps
-from logging import INFO, Logger
+from logging import INFO, Logger, getLogger
 from time import perf_counter
 from typing import Awaitable, Callable, TypeVar
 
@@ -86,7 +86,7 @@ _TResult = TypeVar("_TResult")
 
 def timer_wrapped(
     message: str = "{func}: Elapsed time: {:.3f}",
-    logger: Logger | None = None,
+    logger: Logger | None = getLogger(__name__),
     level: int = INFO,
 ) -> Callable[[Callable[_TParams, _TResult]], Callable[_TParams, _TResult],]:
     """A decorator that measures the time elapsed in a block of code.

@@ -19,7 +19,7 @@ from __future__ import annotations
 
 # -- Project information -----------------------------------------------------
 
-project = "Catch Time"
+project = "cm-time"
 copyright = "2020, 34j"
 author = "34j"
 
