@@ -10,7 +10,7 @@ github_username: 34j
 initial_commit: false
 open_source_license: MIT
 package_name: cm_time
-project_name: Catch Time
+project_name: cm-time
 project_short_description: A simple context manager that measures time using perf_counter()
 project_slug: cm-time
 run_poetry_install: false

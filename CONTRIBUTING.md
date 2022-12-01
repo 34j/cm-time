@@ -24,7 +24,7 @@ Look through the GitHub issues for features. Anything tagged with "enhancement" 
 
 ### Write Documentation
 
-Catch Time could always use more documentation, whether as part of the official Catch Time docs, in docstrings, or even on the web in blog posts, articles, and such.
+cm-time could always use more documentation, whether as part of the official cm-time docs, in docstrings, or even on the web in blog posts, articles, and such.
 
 ### Submit Feedback
 

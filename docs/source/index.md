@@ -1,4 +1,4 @@
-# Welcome to Catch Time documentation!
+# Welcome to cm-time documentation!
 
 ```{toctree}
 :caption: Installation & Usage
