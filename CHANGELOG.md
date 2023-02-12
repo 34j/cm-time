@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.1 (2023-02-12)
+### Fix
+* Get module name dynamically from function in timer_wrapped() ([#33](https://github.com/34j/cm-time/issues/33)) ([`84b1d95`](https://github.com/34j/cm-time/commit/84b1d959d959ce92e98a5db389d50a5a6fe270aa))
+
 ## v0.1.0 (2022-12-01)
 ### Feature
 * Log function name ([#7](https://github.com/34j/cm-time/issues/7)) ([`672b766`](https://github.com/34j/cm-time/commit/672b766d20d6b7a8d221978bd82e1b5a63a8fd7b))
