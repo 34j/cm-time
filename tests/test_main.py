@@ -33,16 +33,16 @@ class TestCatchTime(IsolatedAsyncioTestCase):
         with timer() as ct:
             self.assertEqual(ct.elapsed, None)
 
-    def get_string_logger(self) -> tuple[Logger, StringIO]:
+    def get_string_logger(self, name: str = "test_logger") -> tuple[Logger, StringIO]:
         # Create a logger that will write to a string buffer
-        logger = getLogger("test_logger")
+        logger = getLogger(name)
         logger.setLevel(INFO)
         stream = StringIO()
         handler = StreamHandler(stream)
         logger.addHandler(handler)
         return logger, stream
 
-    async def test_logger(self):
+    async def test_custom_logger(self):
         logger, stream = self.get_string_logger()
 
         # Use the logger
@@ -54,6 +54,20 @@ class TestCatchTime(IsolatedAsyncioTestCase):
         self.assertAlmostEqual(float(stream.getvalue()), self.wait, delta=self.delta)
 
     def test_wrapped(self):
+        @timer_wrapped()
+        def test():
+            pass
+
+        logger, stream = self.get_string_logger(test.__module__)
+
+        test()
+
+        self.assertEqual(
+            stream.getvalue(),
+            "TestCatchTime.test_wrapped.<locals>.test: Elapsed time: 0.000\n",
+        )
+
+    def test_wrapped_custom(self):
         logger, stream = self.get_string_logger()
 
         @timer_wrapped(logger=logger)
@@ -64,7 +78,7 @@ class TestCatchTime(IsolatedAsyncioTestCase):
 
         self.assertEqual(
             stream.getvalue(),
-            "TestCatchTime.test_wrapped.<locals>.test: Elapsed time: 0.000\n",
+            "TestCatchTime.test_wrapped_custom.<locals>.test: Elapsed time: 0.000\n",
         )
 
     async def test_wrapped_async(self):
