@@ -6,12 +6,14 @@ from contextlib import ContextDecorator
 from functools import wraps
 from logging import INFO, Logger, getLogger
 from time import perf_counter
-from types import EllipsisType
 from typing import Awaitable, Callable, TypeVar
 
 if sys.version_info < (3, 10):
     from typing_extensions import ParamSpec  # nosec
+
+    EllipsisType = type(Ellipsis)  # nosec
 else:
+    from types import EllipsisType  # nosec
     from typing import ParamSpec  # nosec
 
 
