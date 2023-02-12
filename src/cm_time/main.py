@@ -6,12 +6,13 @@ from contextlib import ContextDecorator
 from functools import wraps
 from logging import INFO, Logger, getLogger
 from time import perf_counter
+from types import EllipsisType
 from typing import Awaitable, Callable, TypeVar
 
 if sys.version_info < (3, 10):
-    from typing_extensions import ParamSpec
+    from typing_extensions import ParamSpec  # nosec
 else:
-    from typing import ParamSpec
+    from typing import ParamSpec  # nosec
 
 
 class timer(ContextDecorator):
@@ -85,8 +86,9 @@ _TResult = TypeVar("_TResult")
 
 
 def timer_wrapped(
+    *,
     message: str = "{func}: Elapsed time: {:.3f}",
-    logger: Logger | None = getLogger(__name__),
+    logger: Logger | EllipsisType | None = ...,
     level: int = INFO,
 ) -> Callable[[Callable[_TParams, _TResult]], Callable[_TParams, _TResult],]:
     """A decorator that measures the time elapsed in a block of code.
@@ -99,6 +101,7 @@ def timer_wrapped(
         for the elapsed time, by default "Elapsed time: {:.3f}"
     logger : Logger | None, optional
         Logger to use, by default None
+        If ... (default), use getLogger(func.__module__)
     level : int, optional
         Level to log at, by default INFO
 
@@ -112,13 +115,17 @@ def timer_wrapped(
         func: Callable[_TParams, _TResult | Awaitable[_TResult]]
     ) -> Callable[_TParams, _TResult | Awaitable[_TResult]]:
         replaced_message = message.replace("{func}", func.__qualname__)
+        if isinstance(logger, EllipsisType):
+            logger_: Logger | None = getLogger(func.__module__)
+        else:
+            logger_ = logger
         if inspect.iscoroutinefunction(func):
 
             @wraps(func)
             async def wrapper_async(
                 *args: _TParams.args, **kwargs: _TParams.kwargs
             ) -> _TResult:
-                with timer(message=replaced_message, logger=logger, level=level):
+                with timer(message=replaced_message, logger=logger_, level=level):
                     return await func(*args, **kwargs)  # type: ignore
 
             return wrapper_async
@@ -126,7 +133,7 @@ def timer_wrapped(
 
             @wraps(func)
             def wrapper(*args: _TParams.args, **kwargs: _TParams.kwargs) -> _TResult:
-                with timer(message=replaced_message, logger=logger, level=level):
+                with timer(message=replaced_message, logger=logger_, level=level):
                     return func(*args, **kwargs)  # type: ignore
 
             return wrapper
