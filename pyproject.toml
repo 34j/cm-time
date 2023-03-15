@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cm-time"
-version = "0.1.1"
+version = "0.1.2"
 description = "A simple context manager that measures time using perf_counter()"
 authors = ["34j <34j.95a2p@simplelogin.com>"]
 license = "CC0-1.0"

@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.2 (2023-03-15)
+### Fix
+* **deps:** Update dependency typing-extensions to v4.5.0 ([#44](https://github.com/34j/cm-time/issues/44)) ([`e716ff3`](https://github.com/34j/cm-time/commit/e716ff3bd68e754495ce394a43073d921dcd7e4f))
+
 ## v0.1.1 (2023-02-12)
 ### Fix
 * Get module name dynamically from function in timer_wrapped() ([#33](https://github.com/34j/cm-time/issues/33)) ([`84b1d95`](https://github.com/34j/cm-time/commit/84b1d959d959ce92e98a5db389d50a5a6fe270aa))
