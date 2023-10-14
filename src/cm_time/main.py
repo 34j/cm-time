@@ -21,8 +21,9 @@ class timer(ContextDecorator):
     _message: str
     _logger: Logger | None
     _level: int
-    _elapsed: float | None
+    _elapsed: float
     _start_time: float | None
+    _intervals: list[float]
     """A context manager that measures the time elapsed in a block of code."""
 
     def __init__(
@@ -57,8 +58,9 @@ class timer(ContextDecorator):
         self._message = message
         self._logger = logger
         self._level = level
-        self._elapsed = None
+        self._elapsed = 0.0
         self._start_time = None
+        self._intervals = []
 
     def __enter__(self) -> timer:
         self._start_time = perf_counter()
@@ -73,14 +75,30 @@ class timer(ContextDecorator):
         if self._start_time is None:
             raise RuntimeError("Timer was not started")
         assert self._start_time is not None  # nosec
-        self._elapsed = perf_counter() - self._start_time
+        _elapsed = perf_counter() - self._start_time
+        self._elapsed += _elapsed
+        self._intervals.append(_elapsed)
         if self._logger is not None:
-            self._logger.log(self._level, self._message.format(self._elapsed))
+            self._logger.log(self._level, self._message.format(_elapsed))
 
     @property
-    def elapsed(self) -> float | None:
+    def elapsed(self) -> float:
         """Elapsed time in seconds."""
         return self._elapsed
+
+    @property
+    def recent(self) -> float | None:
+        """Elapsed time in seconds."""
+        return self._intervals[-1] if self._intervals else None
+
+    @property
+    def intervals(self) -> list[float]:
+        """Intervals of all the elapsed time in seconds."""
+        return self._intervals[:]
+
+    def clear_intervals(self) -> None:
+        """Clears all the stored intervals."""
+        self._intervals.clear()
 
 
 _TParams = ParamSpec("_TParams")
