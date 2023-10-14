@@ -82,12 +82,12 @@ class timer(ContextDecorator):
             self._logger.log(self._level, self._message.format(_elapsed))
 
     @property
-    def elapsed(self) -> float:
+    def elapsed(self) -> float | None:
         """Recent elapsed time in seconds."""
         return self._intervals[-1] if self._intervals else None
 
     @property
-    def total_elapsed(self) -> float | None:
+    def total_elapsed(self) -> float:
         """Elapsed time in seconds."""
         return self._elapsed
 
@@ -99,6 +99,7 @@ class timer(ContextDecorator):
     def clear_intervals(self) -> None:
         """Clears all the stored intervals."""
         self._intervals.clear()
+        self._elapsed = 0.0
 
 
 _TParams = ParamSpec("_TParams")
