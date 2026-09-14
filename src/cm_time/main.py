@@ -92,7 +92,10 @@ def timer_wrapped(
     message: str = "{func}: Elapsed time: {:.3f}",
     logger: Logger | EllipsisType | None = ...,
     level: int = INFO,
-) -> Callable[[Callable[_TParams, _TResult]], Callable[_TParams, _TResult],]:
+) -> Callable[
+    [Callable[_TParams, _TResult]],
+    Callable[_TParams, _TResult],
+]:
     """A decorator that measures the time elapsed in a block of code.
     Asynchronous functions are supported.
 
@@ -114,7 +117,7 @@ def timer_wrapped(
     """
 
     def inner(
-        func: Callable[_TParams, _TResult | Awaitable[_TResult]]
+        func: Callable[_TParams, _TResult | Awaitable[_TResult]],
     ) -> Callable[_TParams, _TResult | Awaitable[_TResult]]:
         replaced_message = message.replace("{func}", func.__qualname__)
         if isinstance(logger, EllipsisType):
