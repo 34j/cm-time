@@ -1,29 +1,23 @@
 from __future__ import annotations
 
 import inspect
-import sys
+from collections.abc import Awaitable, Callable
 from contextlib import ContextDecorator
 from functools import wraps
 from logging import INFO, Logger, getLogger
 from time import perf_counter
-from typing import Awaitable, Callable, TypeVar
-
-if sys.version_info < (3, 10):
-    from typing_extensions import ParamSpec  # nosec
-
-    EllipsisType = type(Ellipsis)  # nosec
-else:
-    from types import EllipsisType  # nosec
-    from typing import ParamSpec  # nosec
+from types import EllipsisType, TracebackType
+from typing import Any, ParamSpec, Self, TypeVar, cast
 
 
-class timer(ContextDecorator):
+class Timer(ContextDecorator):
+    """Measure the time elapsed in a block of code."""
+
     _message: str
     _logger: Logger | None
     _level: int
     _elapsed: float | None
     _start_time: float | None
-    """A context manager that measures the time elapsed in a block of code."""
 
     def __init__(
         self,
@@ -32,13 +26,13 @@ class timer(ContextDecorator):
         logger: Logger | None = None,
         level: int = INFO,
     ) -> None:
-        """A context manager that measures the time elapsed in a block of code.
+        """Initialize a timer.
 
         Parameters
         ----------
         message : str
             Message to log. Must contain a single format specifier
-            for the elapsed time in seconds. optional
+            for the elapsed time in seconds.
         logger : Logger | None, optional
             Logger to use, by default None
         level : int, optional
@@ -48,11 +42,10 @@ class timer(ContextDecorator):
         --------
         >>> from cm_time import timer
         >>> with timer() as ct:
-        >>>     pass
+        ...     pass
         >>> print(ct.elapsed)
-        Output:
-        Elapsed time: 0.000
         0.0
+
         """
         self._message = message
         self._logger = logger
@@ -60,31 +53,51 @@ class timer(ContextDecorator):
         self._elapsed = None
         self._start_time = None
 
-    def __enter__(self) -> timer:
+    def __enter__(self) -> Self:
+        """Start timing and return this timer.
+
+        Returns
+        -------
+        Self
+            This timer.
+
+        """
         self._start_time = perf_counter()
         return self
 
     def __exit__(
         self,
-        type: type[BaseException] | None,
-        value: BaseException | None,
-        traceback: object | None,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        traceback: TracebackType | None,
     ) -> None:
-        if self._start_time is None:
+        """Stop timing and optionally log the elapsed time.
+
+        Raises
+        ------
+        RuntimeError
+            If the timer was not started.
+
+        """
+        del exc_type, exc_value, traceback
+        start_time = self._start_time
+        if start_time is None:
             raise RuntimeError("Timer was not started")
-        assert self._start_time is not None  # nosec
-        self._elapsed = perf_counter() - self._start_time
+        self._elapsed = perf_counter() - start_time
         if self._logger is not None:
             self._logger.log(self._level, self._message.format(self._elapsed))
 
     @property
     def elapsed(self) -> float | None:
-        """Elapsed time in seconds."""
+        """Return elapsed time in seconds."""
         return self._elapsed
 
 
+timer = Timer
+
 _TParams = ParamSpec("_TParams")
 _TResult = TypeVar("_TResult")
+_FUNC_PLACEHOLDER = "{func}"
 
 
 def timer_wrapped(
@@ -92,8 +105,9 @@ def timer_wrapped(
     message: str = "{func}: Elapsed time: {:.3f}",
     logger: Logger | EllipsisType | None = ...,
     level: int = INFO,
-) -> Callable[[Callable[_TParams, _TResult]], Callable[_TParams, _TResult],]:
-    """A decorator that measures the time elapsed in a block of code.
+) -> Callable[[Callable[_TParams, _TResult]], Callable[_TParams, _TResult]]:
+    """Create a decorator that measures function execution time.
+
     Asynchronous functions are supported.
 
     Parameters
@@ -102,42 +116,45 @@ def timer_wrapped(
         Message to log. Must contain a single format specifier
         for the elapsed time, by default "Elapsed time: {:.3f}"
     logger : Logger | None, optional
-        Logger to use, by default None
-        If ... (default), use getLogger(func.__module__)
+        Logger to use, by default None. If ... (default), use the
+        logger for the decorated function's module.
     level : int, optional
         Level to log at, by default INFO
 
     Returns
     -------
     Callable[[Callable[_TParams, _TResult]], Callable[_TParams, _TResult]]
-        Wrapped function.
+        A decorator that wraps a function.
+
     """
 
     def inner(
-        func: Callable[_TParams, _TResult | Awaitable[_TResult]]
+        func: Callable[_TParams, _TResult | Awaitable[_TResult]],
     ) -> Callable[_TParams, _TResult | Awaitable[_TResult]]:
-        replaced_message = message.replace("{func}", func.__qualname__)
+        func_name = getattr(func, "__qualname__", type(func).__qualname__)
+        module_name = getattr(func, "__module__", type(func).__module__)
+        replaced_message = message.replace(_FUNC_PLACEHOLDER, func_name)
         if isinstance(logger, EllipsisType):
-            logger_: Logger | None = getLogger(func.__module__)
+            logger_: Logger | None = getLogger(module_name)
         else:
             logger_ = logger
         if inspect.iscoroutinefunction(func):
 
             @wraps(func)
             async def wrapper_async(
-                *args: _TParams.args, **kwargs: _TParams.kwargs
+                *args: _TParams.args,
+                **kwargs: _TParams.kwargs,
             ) -> _TResult:
                 with timer(message=replaced_message, logger=logger_, level=level):
-                    return await func(*args, **kwargs)  # type: ignore
+                    return await func(*args, **kwargs)
 
             return wrapper_async
-        else:
 
-            @wraps(func)
-            def wrapper(*args: _TParams.args, **kwargs: _TParams.kwargs) -> _TResult:
-                with timer(message=replaced_message, logger=logger_, level=level):
-                    return func(*args, **kwargs)  # type: ignore
+        @wraps(func)
+        def wrapper(*args: _TParams.args, **kwargs: _TParams.kwargs) -> _TResult:
+            with timer(message=replaced_message, logger=logger_, level=level):
+                return cast("_TResult", func(*args, **kwargs))
 
-            return wrapper
+        return wrapper
 
-    return inner  # type: ignore
+    return cast("Any", inner)

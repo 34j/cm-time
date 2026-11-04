@@ -1,19 +1,19 @@
 # Changes here will be overwritten by Copier
-_commit: c3c975e
-_src_path: gh:browniebroke/pypackage-template
-add_me_as_contributor: false
+_commit: 03e2f9b
+_src_path: gh:34j/pypackage-template-fork
 copyright_year: '2022'
 documentation: true
-email: 34j.95a2p@simplelogin.com
-full_name: 34j
-github_username: 34j
+github_user: 34j
+has_cli: false
 initial_commit: false
-open_source_license: MIT
-package_name: cm_time
+module_name: cm_time
+open_source_license: CC0-1.0
+open_with_editor: false
 project_name: cm-time
 project_short_description: A simple context manager that measures time using perf_counter()
 project_slug: cm-time
-run_poetry_install: false
-setup_github: false
+run_uv_sync: false
 setup_pre_commit: false
+user_name: 34j
+version: 0.1.2
 
